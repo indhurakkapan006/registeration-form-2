@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registration Form</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      max-width: 150px;
+      height: auto;
+    }
+
+    h2 {
+      color: #333;
+      text-align: center;
+    }
+
+    form input[type="text"],
+    form input[type="email"],
+    #searchInput {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    form label {
+      margin-right: 15px;
+    }
+
+    button {
+      background-color: #007d4f;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005c39;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Logo Section -->
+    <div class="logo">
+      <img src="images.png" alt="Logo">
+    </div>
+
+    <h2>Register Your Details</h2>
+    <form id="registrationForm">
+      <input type="text" id="name" placeholder="Enter Your Name" required />
+      <input type="email" id="email" placeholder="Enter Your Email" required />
+      <input type="text" id="adhar" placeholder="Enter Your Adhar Card Number" required />
+      
+      <label><input type="radio" name="gender" value="male" required> Male</label>
+      <label><input type="radio" name="gender" value="female" required> Female</label>
+
+      <br><br>
+      <button type="submit">Submit</button>
+    </form>
+
+    <h2>View Details</h2>
+    <input type="text" id="searchInput" placeholder="Search..." />
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Adhar</th>
+          <th>Gender</th>
+        </tr>
+      </thead>
+      <tbody id="dataBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    class RegistrationForm {
+      constructor() {
+        this.users = [];
+      }
+
+      addUser(user) {
+        this.users.push(user);
+        this.displayUsers(this.users);
+      }
+
+      displayUsers(userArray) {
+        const tbody = document.getElementById("dataBody");
+        tbody.innerHTML = "";
+
+        userArray.forEach((user) => {
+          const row = `
+            <tr>
+              <td>${user.name}</td>
+              <td>${user.email}</td>
+              <td>${user.adhar}</td>
+              <td>${user.gender}</td>
+            </tr>`;
+          tbody.innerHTML += row;
+        });
+      }
+
+      searchUsers(keyword) {
+        const filtered = this.users.filter((user) => {
+          return (
+            user.name.toLowerCase().includes(keyword) ||
+            user.email.toLowerCase().includes(keyword) ||
+            user.adhar.includes(keyword) ||
+            user.gender.toLowerCase().includes(keyword)
+          );
+        });
+
+        this.displayUsers(filtered);
+      }
+    }
+
+    const formHandler = new RegistrationForm();
+
+    document.getElementById("registrationForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const adhar = document.getElementById("adhar").value;
+      const gender = document.querySelector("input[name='gender']:checked").value;
+
+      const user = { name, email, adhar, gender };
+      formHandler.addUser(user);
+
+      e.target.reset();
+    });
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      const keyword = e.target.value.toLowerCase();
+      formHandler.searchUsers(keyword);
+    });
+  </script>
+</body>
+</html>
